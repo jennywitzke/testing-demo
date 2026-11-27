@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LendIt.Api/LendIt.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LendIt.E2E.Tests/LendIt.E2E.Tests.csproj" />
+    <Project Path="tests/LendIt.Tests/LendIt.Tests.csproj" />
+    <Project Path="tests/LendIt.UI.Tests/LendIt.UI.Tests.csproj" />
+  </Folder>
+</Solution>
