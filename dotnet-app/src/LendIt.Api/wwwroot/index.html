@@ -35,7 +35,7 @@
 
         const status = document.createElement('span');
         status.dataset.testid = 'item-' + item.id + '-status';
-        status.textContent = item.available ? 'Available' : 'Checked out';
+        status.textContent = item.available ? 'Available' : 'Lent out';
 
         const button = document.createElement('button');
         button.dataset.testid = 'lend-button-' + item.id;
