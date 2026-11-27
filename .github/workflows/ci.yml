@@ -2,7 +2,7 @@ name: LendIt CI
 
 on:
   push:
-    branches: [main, task-0-setup]
+    branches: [main]
     tags: ['v*']
   pull_request:
     branches: [main]
@@ -89,7 +89,7 @@ jobs:
             type=ref,event=branch
             type=semver,pattern={{version}}
 
-      - name: Build image once (load locally for E2E)
+      - name: Build image once (load locally for E2E and UI)
         uses: docker/build-push-action@v6
         with:
           context: dotnet-app
@@ -110,6 +110,20 @@ jobs:
           --results-directory TestResults
           --logger "trx;LogFileName=e2e-results.trx"
 
+      - name: Build UI tests and install Playwright Chromium
+        run: |
+          dotnet build tests/LendIt.UI.Tests
+          pwsh tests/LendIt.UI.Tests/bin/Debug/net10.0/playwright.ps1 install --with-deps chromium
+
+      - name: Run Playwright UI tests against container
+        env:
+          BASE_URL: http://localhost:8080
+        run: >
+          dotnet test tests/LendIt.UI.Tests
+          --no-build
+          --results-directory TestResults
+          --logger "trx;LogFileName=ui-results.trx"
+
       - name: Collect container logs and stop container
         if: always()
         run: |
@@ -117,11 +131,11 @@ jobs:
           docker logs lendit > TestResults/container.log 2>&1 || true
           docker rm -f lendit || true
 
-      - name: Upload E2E report and container logs
+      - name: Upload E2E/UI reports and container logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-test-results
+          name: e2e-ui-test-results
           path: dotnet-app/TestResults
           if-no-files-found: ignore
 
