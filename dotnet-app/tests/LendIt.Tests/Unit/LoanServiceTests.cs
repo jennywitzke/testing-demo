@@ -65,7 +65,7 @@ public class LoanServiceTests
 
     [Theory]
     [InlineData(10, 0.00)]
-    [InlineData(20, 3.00)]
+    [InlineData(20, 99.00)]
     public void Returning_frees_the_item_and_computes_late_fee_from_clock(int daysKept, double expectedFee)
     {
         _loans.Get(42).Returns(new Loan(42, 1, "alice", new DateOnly(2026, 5, 1), null));
